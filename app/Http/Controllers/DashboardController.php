@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Debtor;
+use App\MOdels\Sale;
 
 class DashboardController extends Controller
 {
@@ -20,6 +21,11 @@ class DashboardController extends Controller
 
         $totalDebtors = Debtor::count();
 
-        return view('dashboard', compact('totalUsuarios', 'lowStockProducts', 'totalDebtors'));
+         $latestSales = Sale::with('user') // Carga el vendedor (relación user)
+                        ->orderBy('sale_date', 'desc')
+                        ->take(4)
+                        ->get();
+
+    return view('dashboard', compact('totalUsuarios', 'lowStockProducts', 'totalDebtors', 'latestSales'));
     }
 }

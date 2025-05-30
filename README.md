@@ -14,4 +14,3 @@ El proyecto Adminix se centra en el desarrollo de un sistema de gestión de inve
 - **Mostrar el inventario completo** de manera legible.
 
 ---
->>>>>>> 4fd607e27cd5f41762ca66e2ae0edc60b3028c33
