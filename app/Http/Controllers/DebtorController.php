@@ -7,16 +7,26 @@ use Illuminate\Http\Request;
 
 class DebtorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->get('search');
 
-    $debtors = Debtor::paginate(10);
+        $query = Debtor::query();
 
-    // Obtener el total de deudores
-    $totalDebtors = Debtor::count();
+        if ($search) {
+            $query->where('full_name', 'LIKE', '%' . $search . '%');
+        }
 
-    // Pasar la variable totalDebtors a la vista
-    return view('debtors.index', compact('debtors', 'totalDebtors'));
+        $debtors = $query->paginate(10)->appends(request()->query());
+
+        // Obtener el total de deudores (sin filtro para mostrar el total general)
+        $totalDebtors = Debtor::count();
+
+        // Obtener el total de resultados filtrados
+        $filteredCount = $query->count();
+
+        // Pasar las variables a la vista
+        return view('debtors.index', compact('debtors', 'totalDebtors', 'search', 'filteredCount'));
     }
 
     public function create()
@@ -69,30 +79,29 @@ class DebtorController extends Controller
     }
 
     public function pay(Request $request)
-{
-    $request->validate([
-        'debtor_id' => 'required|exists:debtors,id',
-        'amount' => 'required|numeric|min:0.01',
-    ]);
+    {
+        $request->validate([
+            'debtor_id' => 'required|exists:debtors,id',
+            'amount' => 'required|numeric|min:0.01',
+        ]);
 
-    $debtor = Debtor::findOrFail($request->debtor_id);
+        $debtor = Debtor::findOrFail($request->debtor_id);
 
-    if ($request->amount > $debtor->deuda) {
-        return redirect()->route('debtors.index')->with('error', 'El monto ingresado excede la deuda.');
+        if ($request->amount > $debtor->deuda) {
+            return redirect()->route('debtors.index')->with('error', 'El monto ingresado excede la deuda.');
+        }
+
+        // Restar el monto pagado
+        $debtor->deuda -= $request->amount;
+
+        if ($debtor->deuda <= 0) {
+            // Si la deuda queda en 0 o menos, eliminar el deudor
+            $debtor->delete();
+            return redirect()->route('debtors.index')->with('success', 'Pago registrado y deudor eliminado automáticamente.');
+        } else {
+            // Si aún queda deuda, solo guardar el nuevo valor
+            $debtor->save();
+            return redirect()->route('debtors.index')->with('success', 'Pago registrado exitosamente.');
+        }
     }
-
-    // Restar el monto pagado
-    $debtor->deuda -= $request->amount;
-
-    if ($debtor->deuda <= 0) {
-        // Si la deuda queda en 0 o menos, eliminar el deudor
-        $debtor->delete();
-        return redirect()->route('debtors.index')->with('success', 'Pago registrado y deudor eliminado automáticamente.');
-    } else {
-        // Si aún queda deuda, solo guardar el nuevo valor
-        $debtor->save();
-        return redirect()->route('debtors.index')->with('success', 'Pago registrado exitosamente.');
-    }
-}
-
 }
