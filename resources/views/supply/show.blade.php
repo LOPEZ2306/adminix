@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('template_title')
-    Detalle de Abastecimiento
+    Detalle de Abastecimiento #{{ $supply->id }}
 @endsection
 
 @section('content')
@@ -11,9 +11,14 @@
                 <div class="card">
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="card-title">Detalle de Abastecimiento</span>
+                            <span class="card-title">Detalle de Abastecimiento #{{ $supply->id }}</span>
                             <div class="float-right">
-                                <a href="{{ route('supplies.index') }}" class="float-right btn btn-primary btn-sm">Volver</a>
+                                <button class="mr-2 btn btn-info btn-sm" onclick="window.print()">
+                                    <i class="fa fa-print"></i> Imprimir
+                                </button>
+                                <a href="{{ route('supplies.index') }}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-arrow-left"></i> Volver
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -22,10 +27,24 @@
                         <div class="mb-4 row">
                             <div class="col-md-6">
                                 <h5>Información del Abastecimiento</h5>
-                                <p><strong>ID:</strong> {{ $supply->id }}</p>
-                                <p><strong>Fecha:</strong> {{ $supply->supply_date->format('d/m/Y H:i') }}</p>
-                                <p><strong>Responsable:</strong> {{ $supply->user->name }}</p>
-                                <p><strong>Total:</strong> ${{ number_format($supply->total_amount, 0, ',', '.') }}</p>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <th width="150">Número:</th>
+                                        <td>#{{ $supply->id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha:</th>
+                                        <td>{{ $supply->supply_date->format('d/m/Y H:i') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Responsable:</th>
+                                        <td>{{ $supply->user->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total:</th>
+                                        <td>${{ number_format($supply->total_amount, 0, ',', '.') }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
 
@@ -36,6 +55,7 @@
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
                                                 <th>Producto</th>
                                                 <th>Marca</th>
                                                 <th>Cantidad</th>
@@ -44,8 +64,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($supply->supplyDetails as $detail)
+                                            @foreach ($supply->supplyDetails as $index => $detail)
                                                 <tr>
+                                                    <td>{{ $index + 1 }}</td>
                                                     <td>{{ $detail->product->product }}</td>
                                                     <td>{{ $detail->product->brand }}</td>
                                                     <td>{{ $detail->quantity }}</td>

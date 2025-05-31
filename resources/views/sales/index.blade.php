@@ -25,7 +25,7 @@
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
+                                        <th>No</th> <!-- Cambiado para mostrar el ID real -->
                                         <th>Fecha</th>
                                         <th>Método de Pago</th>
                                         <th>Total</th>
@@ -37,7 +37,7 @@
                                 <tbody>
                                     @foreach ($sales as $sale)
                                         <tr>
-                                            <td>{{ $loop->iteration + ($sales->currentPage() - 1) * $sales->perPage() }}</td>
+                                            <td>#{{ $sale->id }}</td> <!-- Mostramos el ID real de la venta -->
                                             <td>{{ $sale->sale_date->format('d/m/Y H:i') }}</td>
                                             <td>{{ $sale->payment_method }}</td>
                                             <td>${{ number_format($sale->total_amount, 0, ',', '.') }}</td>

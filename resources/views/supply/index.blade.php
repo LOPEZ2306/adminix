@@ -36,7 +36,7 @@
                             <tbody>
                                 @foreach ($supplies as $supply)
                                     <tr>
-                                        <td>{{ $loop->iteration + ($supplies->currentPage() - 1) * $supplies->perPage() }}</td>
+                                        <td>#{{ $supply->id }}</td> <!-- Mostramos el ID real del abastecimiento -->
                                         <td>{{ $supply->supply_date->format('d/m/Y H:i') }}</td>
                                         <td>${{ number_format($supply->total_amount, 0, ',', '.') }}</td>
                                         <td>{{ $supply->supplyDetails->count() }}</td>
