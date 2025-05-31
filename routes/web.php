@@ -42,7 +42,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/product/{id}', [SaleController::class, 'getProduct'])->name('product');
             Route::post('/validate-stock', [SaleController::class, 'validateStock'])->name('validateStock');
             Route::get('/{sale}', [SaleController::class, 'show'])->name('show');
-            Route::delete('/{sale}', [SaleController::class, 'destroy'])->name('destroy');
+
+            // Solo los administradores pueden eliminar las ventas
+            Route::middleware('role:admin')->delete('/{sale}', [SaleController::class, 'destroy'])->name('destroy');
         });
 
         // Abastecimiento
@@ -51,7 +53,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', [SupplyController::class, 'create'])->name('create');
             Route::post('/store', [SupplyController::class, 'store'])->name('store');
             Route::get('/{supply}', [SupplyController::class, 'show'])->name('show');
-            Route::delete('/{supply}', [SupplyController::class, 'destroy'])->name('destroy');
+
+            // Solo los administradores pueden eliminar el abastecimiento
+            Route::middleware('role:admin')->delete('/{supply}', [SupplyController::class, 'destroy'])->name('destroy');
         });
 
         // Deudores
