@@ -33,13 +33,32 @@ class DashboardController extends Controller
                         ->with('user')
                         ->first();
 
+        $topProduct = DB::table('sale_details')
+            ->select('product_id', DB::raw('SUM(quantity) as total_sold'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_sold')
+            ->first();
+
+        $topSoldProduct = null;
+
+        if ($topProduct) {
+            $product = Product::find($topProduct->product_id);
+            if ($product) {
+                $topSoldProduct = [
+                    'name' => $product->product,
+                    'total_sold' => $topProduct->total_sold
+                ];
+            }
+        }
+
         return view('dashboard', compact(
             'totalUsuarios',
             'lowStockProducts',
             'latestUsers',
             'totalDebtors',
             'latestSales',
-            'topSeller'
+            'topSeller',
+            'topSoldProduct'
         ));
     }
 }

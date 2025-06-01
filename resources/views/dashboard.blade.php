@@ -16,41 +16,47 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <!-- Cards de resumen -->
+
+      {{-- Producto más vendido --}}
+      @if($topSoldProduct)
       <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
           <div class="inner">
-            <h3>150</h3>
-            <p>Nuevos pedidos</p>
+            <h3>{{ $topSoldProduct['total_sold'] }}</h3>
+            <p>Más vendido: {{ $topSoldProduct['name'] }}</p>
           </div>
           <div class="icon">
             <i class="ion ion-bag"></i>
           </div>
-          <a href="#" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="{{ route('products.index') }}" class="small-box-footer">
+            Más info <i class="fas fa-arrow-circle-right"></i>
+          </a>
+        </div>
+      </div>
+      @endif
+
+      {{-- Vendedor con más ventas --}}
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+          <div class="inner">
+            @if ($topSeller && $topSeller->user)
+              <h3>{{ $topSeller->user->name }}</h3>
+              <p>Vendedor con más ventas ({{ $topSeller->total_sales }})</p>
+            @else
+              <h3>Sin datos</h3>
+              <p>No hay ventas registradas</p>
+            @endif
+          </div>
+          <div class="icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <a href="{{ route('sales.index') }}" class="small-box-footer">
+            Más info <i class="fas fa-arrow-circle-right"></i>
+          </a>
         </div>
       </div>
 
-      <div class="col-lg-3 col-6">
-    <div class="small-box bg-primary">
-        <div class="inner">
-            @if ($topSeller && $topSeller->user)
-                <h3>{{ $topSeller->user->name }}</h3>
-                <p>Vendedor con más ventas ({{ $topSeller->total_sales }})</p>
-            @else
-                <h3>Sin datos</h3>
-                <p>No hay ventas registradas</p>
-            @endif
-        </div>
-        <div class="icon">
-            <i class="fas fa-trophy"></i>
-        </div>
-        <a href="{{ route('sales.index') }}" class="small-box-footer">
-            Más info <i class="fas fa-arrow-circle-right"></i>
-        </a>
-    </div>
-</div>
-
-
+      {{-- Total de usuarios --}}
       <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
           <div class="inner">
@@ -60,10 +66,13 @@
           <div class="icon">
             <i class="ion ion-person-add"></i>
           </div>
-          <a href="{{ route('users.index') }}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="{{ route('users.index') }}" class="small-box-footer">
+            Más info <i class="fas fa-arrow-circle-right"></i>
+          </a>
         </div>
       </div>
 
+      {{-- Total de morosos --}}
       <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
           <div class="inner">
@@ -80,8 +89,9 @@
       </div>
     </div>
 
-    <!-- Tarjeta con gráfica (estructura lista) -->
+    {{-- Últimas ventas y productos con bajo stock --}}
     <div class="row">
+      {{-- Últimas Ventas --}}
       <div class="col-md-6">
         <div class="card" style="max-height: 350px; overflow-y: auto;">
           <div class="card-header">
@@ -121,6 +131,7 @@
         </div>
       </div>
 
+      {{-- Bajo stock --}}
       <div class="col-md-6">
         <div class="card" style="max-height: 350px; overflow-y: auto;">
           <div class="card-header">
@@ -131,7 +142,7 @@
               @forelse ($lowStockProducts as $product)
                 <li class="list-group-item {{ $product->quantity <= 1 ? 'text-danger' : '' }}">
                   {{ $product->product }} - {{ $product->brand }}
-                  <span class="badge {{ $product->quantity <= 1 ? 'bg-danger' : 'bg-warning' }} float-end">
+                  <span class="badge float-end {{ $product->quantity <= 1 ? 'bg-danger' : 'bg-warning' }}">
                     Cantidad: {{ $product->quantity }}
                   </span>
                 </li>
@@ -144,10 +155,10 @@
       </div>
     </div>
 
-    <!-- Cerrar sesión -->
+    {{-- Cerrar sesión --}}
     <form method="POST" action="{{ route('logout') }}">
       @csrf
-      <button type="submit" class="mb-3">Cerrar sesión</button>
+      <button type="submit" class="mt-3 btn btn-danger">Cerrar sesión</button>
     </form>
 
   </div>
