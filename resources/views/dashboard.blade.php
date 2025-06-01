@@ -45,7 +45,7 @@
             <i class="fas fa-trophy"></i>
         </div>
         <a href="{{ route('sales.index') }}" class="small-box-footer">
-            Ver ventas <i class="fas fa-arrow-circle-right"></i>
+            Más info <i class="fas fa-arrow-circle-right"></i>
         </a>
     </div>
 </div>
