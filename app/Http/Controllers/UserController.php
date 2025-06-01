@@ -51,8 +51,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, string $id)
@@ -63,18 +62,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|exists:roles,name',
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
 
-        if ($request->password) {
+        if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }
 
         $user->save();
-        $user->syncRoles([$request->role]);
 
         return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
     }

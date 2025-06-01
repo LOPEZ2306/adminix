@@ -4,6 +4,13 @@
 @section('header', 'Editar Usuario')
 
 @section('content')
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+
     <form action="{{ route('users.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -20,15 +27,9 @@
         <input type="password" name="password">
         @error('password') <div class="error">{{ $message }}</div> @enderror
 
-        <label for="role">Rol:</label>
-        <select name="role" required>
-            @foreach ($roles as $role)
-                <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
-                    {{ ucfirst($role->name) }}
-                </option>
-            @endforeach
-        </select>
-        @error('role') <div class="error">{{ $message }}</div> @enderror
+        <label for="password_confirmation">Confirmar Contraseña:</label>
+        <input type="password" name="password_confirmation">
+        @error('password_confirmation') <div class="error">{{ $message }}</div> @enderror
 
         <br><br>
         <button type="submit">Actualizar</button>
