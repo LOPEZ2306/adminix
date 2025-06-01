@@ -104,4 +104,24 @@ class DebtorController extends Controller
             return redirect()->route('debtors.index')->with('success', 'Pago registrado exitosamente.');
         }
     }
+
+    public function increaseDebt(Request $request)
+    {
+        $request->validate([
+            'debtor_id' => 'required|exists:debtors,id',
+            'amount' => 'required|numeric|min:0.01',
+        ]);
+
+        $debtor = Debtor::findOrFail($request->debtor_id);
+
+        // Sumar el monto ingresado a la deuda actual
+        $debtor->deuda += $request->amount;
+
+        // Guardar el nuevo valor de la deuda
+        $debtor->save();
+
+        return redirect()->route('debtors.index')->with('success', 'Deuda aumentada exitosamente.');
+    }
+
+
 }

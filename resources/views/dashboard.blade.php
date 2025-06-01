@@ -31,17 +31,25 @@
       </div>
 
       <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3>53<sup style="font-size: 20px">%</sup></h3>
-            <p>Rate de rebote</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-stats-bars"></i>
-          </div>
-          <a href="#" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+    <div class="small-box bg-primary">
+        <div class="inner">
+            @if ($topSeller && $topSeller->user)
+                <h3>{{ $topSeller->user->name }}</h3>
+                <p>Vendedor con más ventas ({{ $topSeller->total_sales }})</p>
+            @else
+                <h3>Sin datos</h3>
+                <p>No hay ventas registradas</p>
+            @endif
         </div>
-      </div>
+        <div class="icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <a href="{{ route('sales.index') }}" class="small-box-footer">
+            Ver ventas <i class="fas fa-arrow-circle-right"></i>
+        </a>
+    </div>
+</div>
+
 
       <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">

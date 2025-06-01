@@ -77,6 +77,7 @@
                                             <i class="fa fa-fw fa-edit"></i> Editar
                                         </a>
                                         <button class="mt-2 btn btn-success btn-sm" onclick="openPayModal({{ $debtor->id }}, {{ $debtor->deuda }})">Pagar</button>
+                                        <button class="mt-2 btn btn-warning btn-sm" onclick="openIncreaseDebtModal({{ $debtor->id }}, {{ $debtor->deuda }})">Aumentar deuda</button> <!-- Nuevo botón -->
                                     </div>
                                 </div>
                             </div>
@@ -132,6 +133,32 @@
     </div>
 </div>
 
+<!-- Modal para aumentar deuda -->
+<div class="modal fade" id="increaseDebtModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="increaseDebtForm" method="POST" action="{{ route('debtors.increase') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Aumentar Deuda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="debtor_id" id="debtorIdIncrease">
+                    <div class="mb-3">
+                        <label for="increaseAmount" class="form-label">Monto a aumentar</label>
+                        <input type="number" class="form-control" name="amount" id="increaseAmount" min="0" step="0.01">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="submitIncreaseBtn">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     function openPayModal(id, deuda) {
         document.getElementById('debtorId').value = id;
@@ -149,6 +176,15 @@
         };
 
         payModal.show();
+    }
+
+    function openIncreaseDebtModal(id, deuda) {
+        document.getElementById('debtorIdIncrease').value = id;
+        const increaseDebtModal = new bootstrap.Modal(document.getElementById('increaseDebtModal'));
+        const increaseAmount = document.getElementById('increaseAmount');
+        increaseAmount.value = '';
+
+        increaseDebtModal.show();
     }
 </script>
 @endsection

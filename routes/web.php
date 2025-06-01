@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
         // Deudores
         Route::resource('debtors', DebtorController::class);
         Route::post('debtors/pay', [DebtorController::class, 'pay'])->name('debtors.pay');
+        Route::post('/debtors/increase', [DebtorController::class, 'increaseDebt'])->name('debtors.increase');
     });
 
 });
